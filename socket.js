@@ -13,7 +13,7 @@ module.exports.initIO = (httpServer) => {
   });
 
   IO.on("connection", (socket) => {
-    console.log(socket.user, "Connected");
+    console.log(socket.user, "Connected -_-");
     socket.join(socket.user);
 
     socket.on("call", (data) => {
