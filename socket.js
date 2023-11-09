@@ -13,41 +13,41 @@ module.exports.initIO = (httpServer) => {
   });
 
   IO.on("connection", (socket) => {
-    console.log(socket.user, "Connected -_-");
+    console.log(socket.user, "Connected");
     socket.join(socket.user);
 
-    socket.on("call", (data) => {
-      let calleeId = data.calleeId;
-      let rtcMessage = data.rtcMessage;
-      console.log(rtcMessage);
-      console.log(calleeId);
-      socket.to(calleeId).emit("newCall", {
-        callerId: socket.user,
-        rtcMessage: rtcMessage,
-      });
+    // Handle incoming call request
+  socket.on('call', (data) => {
+    let calleeId = data.calleeId;
+    let rtcMessage = data.rtcMessage;
+    // Send the call request to the recipient
+    IO.to(calleeId).emit('incomingCall', {
+      callerId: socket.user,
+      // Add relevant data here
     });
+  });
 
-    socket.on("answerCall", (data) => {
-      let callerId = data.callerId;
+     // Handle answer call
+  socket.on('answerCall', (data) => {
+    // Send the answer to the caller
+    let callerId = data.callerId;
       rtcMessage = data.rtcMessage;
-
-      socket.to(callerId).emit("callAnswered", {
-        callee: socket.user,
-        rtcMessage: rtcMessage,
-      });
+    IO.to(callerId).emit('callAnswered', {
+      calleeId: socket.user,
+      // Add relevant data here
     });
+  });
 
-    socket.on("ICEcandidate", (data) => {
-      console.log("ICEcandidate data.calleeId", data.calleeId);
-      let calleeId = data.calleeId;
-      let rtcMessage = data.rtcMessage;
-      console.log("socket.user emit", socket.user);
-
-      socket.to(calleeId).emit("ICEcandidate", {
-        sender: socket.user,
-        rtcMessage: rtcMessage,
-      });
+   // Handle call end
+   socket.on('endCall', (data) => {
+    // Notify the other party that the call has ended
+    IO.to(data.targetId).emit('callEnded', {
+      // Add relevant data here
     });
+  });
+
+
+
   });
 };
 
