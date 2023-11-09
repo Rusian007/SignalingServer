@@ -20,6 +20,8 @@ module.exports.initIO = (httpServer) => {
   socket.on('call', (data) => {
     let calleeId = data.calleeId;
     let rtcMessage = data.rtcMessage;
+
+    console.log("Call going to " + calleeId );
     // Send the call request to the recipient
     IO.to(calleeId).emit('incomingCall', {
       callerId: socket.user,
@@ -31,7 +33,8 @@ module.exports.initIO = (httpServer) => {
   socket.on('answerCall', (data) => {
     // Send the answer to the caller
     let callerId = data.callerId;
-      rtcMessage = data.rtcMessage;
+     let rtcMessage = data.rtcMessage;
+    console.log("Call send by " +callerId);
     IO.to(callerId).emit('callAnswered', {
       calleeId: socket.user,
       // Add relevant data here
