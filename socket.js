@@ -19,8 +19,8 @@ module.exports.initIO = (httpServer) => {
     // Handle incoming call request
   socket.on('call', (data) => {
     let calleeId = data.calleeId;
-    let rtcMessage = data.rtcMessage;
-
+    
+console.log("Call coming from " + socket.user );
     console.log("Call going to " + calleeId );
     // Send the call request to the recipient
     IO.to(calleeId).emit('incomingCall', {
