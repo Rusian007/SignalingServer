@@ -35,6 +35,7 @@ module.exports.initIO = (httpServer) => {
     let callerId = data.callerId;
      let roomUrl = data.roomUrl;
     console.log("Call send by " +callerId);
+    console.log(data);
     console.log("URL SEND BY CLIENT >>>>>>>>>>");
     console.log(roomUrl);
     IO.to(callerId).emit('callAnswered', {
