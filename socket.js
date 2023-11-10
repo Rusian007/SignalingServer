@@ -33,10 +33,13 @@ module.exports.initIO = (httpServer) => {
   socket.on('answerCall', (data) => {
     // Send the answer to the caller
     let callerId = data.callerId;
-     let rtcMessage = data.rtcMessage;
+     let roomUrl = data.roomUrl;
     console.log("Call send by " +callerId);
+    console.log("URL SEND BY CLIENT >>>>>>>>>>");
+    console.log(roomUrl);
     IO.to(callerId).emit('callAnswered', {
       calleeId: socket.user,
+      roomURL : roomUrl
       // Add relevant data here
     });
   });
