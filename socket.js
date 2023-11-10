@@ -33,7 +33,7 @@ module.exports.initIO = (httpServer) => {
   socket.on('answerCall', (data) => {
     // Send the answer to the caller
     let callerId = data.callerId;
-     let roomUrl = data.roomUrl;
+     let roomUrl = data.CreatedRoom;
     console.log("Call send by " +callerId);
     console.log(data);
     console.log("URL SEND BY CLIENT >>>>>>>>>>");
