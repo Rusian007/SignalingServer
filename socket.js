@@ -29,6 +29,19 @@ console.log("Call coming from " + socket.user );
     });
   });
 
+    // Handle Audio call
+    socket.on('Audiocall', (data) => {
+    let calleeId = data.calleeId;
+    
+console.log("Call coming from " + socket.user );
+    console.log("Call going to " + calleeId );
+    // Send the call request to the recipient
+    IO.to(calleeId).emit('incomingAudioCall', {
+      callerId: socket.user,
+      // Add relevant data here
+    });
+  });
+
      // Handle answer call
   socket.on('answerCall', (data) => {
     // Send the answer to the caller
@@ -44,6 +57,8 @@ console.log("Call coming from " + socket.user );
       // Add relevant data here
     });
   });
+
+
 
    // Handle call end
    socket.on('endCall', (data) => {
