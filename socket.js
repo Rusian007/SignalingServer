@@ -15,58 +15,75 @@ module.exports.initIO = (httpServer) => {
   IO.on("connection", (socket) => {
     console.log(socket.user, "Connected");
     socket.join(socket.user);
+    console.log("Logging from new server");
+
+    /****************************For chat */
+    socket.on("chatSend", (data) => {
+      let senderID = socket.user;
+      let receiverID = data.receiverID;
+      let senderType = data.senderType;
+      let chatMessage = data.chatMessage;
+
+
+      socket.to(receiverID).emit("chatReceived", {
+        chatMessage,
+        senderID,
+        receiverID,
+        senderType
+      });
+    });
+
+    /****************************End chat */
 
     // Handle incoming call request
-  socket.on('call', (data) => {
-    let calleeId = data.calleeId;
-    
-console.log("Call coming from " + socket.user );
-    console.log("Call going to " + calleeId );
-    // Send the call request to the recipient
-    IO.to(calleeId).emit('incomingCall', {
-      callerId: socket.user,
-      // Add relevant data here
+    socket.on('call', (data) => {
+      let calleeId = data.calleeId;
+
+      console.log("Call coming from " + socket.user);
+      console.log("Call going to " + calleeId);
+      // Send the call request to the recipient
+      IO.to(calleeId).emit('incomingCall', {
+        callerId: socket.user,
+        // Add relevant data here
+      });
     });
-  });
 
     // Handle Audio call
     socket.on('Audiocall', (data) => {
-    let calleeId = data.calleeId;
-    
-console.log("Call coming from " + socket.user );
-    console.log("Call going to " + calleeId );
-    // Send the call request to the recipient
-    IO.to(calleeId).emit('incomingAudioCall', {
-      callerId: socket.user,
-      // Add relevant data here
+      let calleeId = data.calleeId;
+
+      console.log("Call coming from " + socket.user);
+      console.log("Call going to " + calleeId);
+      // Send the call request to the recipient
+      IO.to(calleeId).emit('incomingAudioCall', {
+        callerId: socket.user,
+        // Add relevant data here
+      });
     });
-  });
 
-     // Handle answer call
-  socket.on('answerCall', (data) => {
-    // Send the answer to the caller
-    let callerId = data.callerId;
-     let roomUrl = data.CreatedRoom;
-    console.log("Call send by " +callerId);
-    console.log(data);
-    console.log("URL SEND BY CLIENT >>>>>>>>>>");
-    console.log(roomUrl);
-    IO.to(callerId).emit('callAnswered', {
-      calleeId: socket.user,
-      roomURL : roomUrl
-      // Add relevant data here
+    // Handle answer call
+    socket.on('answerCall', (data) => {
+      // Send the answer to the caller
+      let callerId = data.callerId;
+      let roomUrl = data.CreatedRoom;
+      console.log("Call send by " + callerId);
+
+      IO.to(callerId).emit('callAnswered', {
+        calleeId: socket.user,
+        roomURL: roomUrl
+        // Add relevant data here
+      });
     });
-  });
 
 
 
-   // Handle call end
-   socket.on('endCall', (data) => {
-    // Notify the other party that the call has ended
-    IO.to(data.targetId).emit('callEnded', {
-      // Add relevant data here
+    // Handle call end
+    socket.on('endCall', (data) => {
+      // Notify the other party that the call has ended
+      IO.to(data.targetId).emit('callEnded', {
+        // Add relevant data here
+      });
     });
-  });
 
 
 
