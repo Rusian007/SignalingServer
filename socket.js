@@ -25,7 +25,7 @@ module.exports.initIO = (httpServer) => {
       let chatMessage = data.chatMessage;
 
 
-      socket.to(receiverID).emit("chatReceived", {
+      IO.to(receiverID).emit("chatReceived", {
         chatMessage,
         senderID,
         receiverID,
