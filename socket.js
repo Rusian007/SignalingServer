@@ -15,78 +15,72 @@ module.exports.initIO = (httpServer) => {
   IO.on("connection", (socket) => {
     console.log(socket.user, "Connected");
     socket.join(socket.user);
-    console.log("Logging from new server");
+    
+  /****************************For chat */
+  socket.on("chatSend", (data) => {
+    let senderID = socket.user;
+    let receiverID = data.receiverID;
+    let senderType=data.senderType;
+    let chatMessage = data.chatMessage;
 
-    /****************************For chat */
-    socket.on("chatSend", (data) => {
-      let senderID = socket.user;
-      let receiverID = data.receiverID;
-      let senderType = data.senderType;
-      let chatMessage = data.chatMessage;
-
-
-      IO.to(receiverID).emit("chatReceived", {
-        chatMessage,
-        senderID,
-        receiverID,
-        senderType
-      });
+    
+    socket.to(receiverID).emit("chatReceived", {
+      chatMessage,
+      senderID,
+      receiverID,
+      senderType
     });
+  });
 
-    /****************************End chat */
-
-    // Handle incoming call request
-    socket.on('call', (data) => {
+  /****************************End chat */
+    socket.on("call", (data) => {
       let calleeId = data.calleeId;
-
-      console.log("Call coming from " + socket.user);
-      console.log("Call going to " + calleeId);
-      // Send the call request to the recipient
-      IO.to(calleeId).emit('incomingCall', {
+      let rtcMessage = data.rtcMessage;
+      console.log(data, "Call");
+      console.log("rtcMessage",rtcMessage );
+      
+      socket.to(calleeId).emit("newCall", {
         callerId: socket.user,
-        // Add relevant data here
+        rtcMessage: rtcMessage,
       });
     });
 
-    // Handle Audio call
-    socket.on('Audiocall', (data) => {
-      let calleeId = data.calleeId;
-
-      console.log("Call coming from " + socket.user);
-      console.log("Call going to " + calleeId);
-      // Send the call request to the recipient
-      IO.to(calleeId).emit('incomingAudioCall', {
-        callerId: socket.user,
-        // Add relevant data here
-      });
-    });
-
-    // Handle answer call
-    socket.on('answerCall', (data) => {
-      // Send the answer to the caller
+    socket.on("answerCall", (data) => {
       let callerId = data.callerId;
-      let roomUrl = data.CreatedRoom;
-      console.log("Call send by " + callerId);
+      rtcMessage = data.rtcMessage;
 
-      IO.to(callerId).emit('callAnswered', {
-        calleeId: socket.user,
-        roomURL: roomUrl
-        // Add relevant data here
+      console.log("answerCall" );
+      console.log("rtcMessage",rtcMessage );
+      socket.to(callerId).emit("callAnswered", {
+        callee: socket.user,
+        rtcMessage: rtcMessage,
+      });
+    });
+
+    socket.on("endCall", (data) => {
+      let callerId = data.callerId;
+      rtcMessage = data.callEnd;
+
+      
+      socket.to(callerId).emit("callEnd", {
+        callee: socket.user,
+        rtcMessage: rtcMessage,
       });
     });
 
 
 
-    // Handle call end
-    socket.on('endCall', (data) => {
-      // Notify the other party that the call has ended
-      IO.to(data.targetId).emit('callEnded', {
-        // Add relevant data here
+    socket.on("ICEcandidate", (data) => {
+      console.log("ICEcandidate data.calleeId", data.calleeId);
+      let calleeId = data.calleeId;
+      let rtcMessage = data.rtcMessage;
+      console.log("socket.user emit", socket.user);
+      console.log("socket.user emit", rtcMessage);
+      socket.to(calleeId).emit("ICEcandidate", {
+        sender: socket.user,
+        rtcMessage: rtcMessage,
       });
     });
-
-
-
   });
 };
 
