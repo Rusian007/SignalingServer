@@ -13,6 +13,7 @@ class SocketService {
     this.io.users = {};
     this.io.on("connection", (socket) => {
       socket.on("register", (username) => this.onRegister(socket, username));
+      
       socket.on("set-peer-id", (peerId) => this.onSetPeerId(socket, peerId));
       socket.on("call", (username) => this.onCall(socket, username));
       socket.on("reject-call", (username) =>
