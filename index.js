@@ -4,17 +4,21 @@ const { createServer } = require('http');
 const express = require('express');
 const { getIO, initIO } = require('./socket');
 
-const app = express();
+// const app = express();
 
-app.use('/', express.static(path.join(__dirname, 'static')));
+// app.use('/', express.static(path.join(__dirname, 'static')));
 
-const httpServer = createServer(app);
+// const httpServer = createServer(app);
 
-let port = process.env.PORT || 3500;
+// let port = process.env.PORT || 3500;
 
-initIO(httpServer);
+const { PeerServer } = require("peer");
 
-httpServer.listen(port)
-console.log("Server started on ", port);
+const peerServer = PeerServer({ port: 9000, path: "/myapp" });
 
-getIO();
+// initIO(httpServer);
+
+// httpServer.listen(port)
+// console.log("Server started on ", port);
+
+// getIO();
