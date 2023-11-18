@@ -35,6 +35,6 @@ server.listen(process.env.PORT || 9000);
 // initIO(httpServer);
 
 // httpServer.listen(port)
-console.log("Server started on ", port);
+console.log("Server started ");
 
 getIO();
