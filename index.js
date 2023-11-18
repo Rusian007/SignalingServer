@@ -2,7 +2,7 @@
 // const { createServer } = require('http');
 
 // const express = require('express');
-// const { getIO, initIO } = require('./socket');
+const { getIO, initIO } = require('./socket');
 
 // const app = express();
 
@@ -29,12 +29,12 @@ const peerServer = ExpressPeerServer(server, {
 });
 
 app.use("/peerjs", peerServer);
-
+initIO(server);
 server.listen(process.env.PORT || 9000);
 
 // initIO(httpServer);
 
 // httpServer.listen(port)
-// console.log("Server started on ", port);
+console.log("Server started on ", port);
 
-// getIO();
+getIO();
