@@ -12,7 +12,7 @@
 
 // let port = process.env.PORT || 3500;
 
-require('dotenv').config()
+
 const express = require("express");
 const { ExpressPeerServer } = require("peer");
 
