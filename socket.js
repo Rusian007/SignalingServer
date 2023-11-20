@@ -31,8 +31,8 @@ module.exports.initIO = (httpServer) => {
       senderType
     });
   });
-
   /****************************End chat */
+    
     socket.on("call", (data) => {
       let calleeId = data.calleeId;
       let rtcMessage = data.rtcMessage;
@@ -67,8 +67,6 @@ module.exports.initIO = (httpServer) => {
         rtcMessage: rtcMessage,
       });
     });
-
-
 
     socket.on("ICEcandidate", (data) => {
       console.log("ICEcandidate data.calleeId", data.calleeId);
