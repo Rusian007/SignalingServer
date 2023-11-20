@@ -60,8 +60,8 @@ module.exports.initIO = (httpServer) => {
     socket.on("endCall", (data) => {
       let callerId = data.callerId;
       rtcMessage = data.callEnd;
-
-      
+      console.log(callerId);
+      console.log("?????????????????");
       socket.to(callerId).emit("callEnd", {
         callee: socket.user,
         rtcMessage: rtcMessage,
